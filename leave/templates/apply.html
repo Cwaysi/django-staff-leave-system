@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+  {% load crispy_forms_tags %}
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+          My Statistics
+      </div>
+      <div class="card-body">
+          <div class="row">
+              <div class="col-3">
+                  <center>
+                      <h5 class="card-title">Days Entitled for {{year}}(Annual)</h5>
+                  </center>
+                  <center>
+                      <h1 class="card-text">{{days}} Days</h1>
+                  </center>
+              </div>
+              <div class="col-3">
+                  <center>
+                      <h5 class="card-title">Total Days Approved/Spent(Annual)</h5>
+                  </center>
+                  <center>
+                      <h1 class="card-text">{{spent}} Days</h1>
+                  </center>
+              </div>
+              <div class="col-3">
+                  <center>
+                      <h5 class="card-title">Total Days Left(Annual)</h5>
+                  </center>
+                  <center>
+                      <h1 class="card-text">{{left}} Days</h1>
+                  </center>
+              </div>
+              <div class="col-3">
+                <center>
+                    <h5 class="card-title">Total of All Leave Spent</h5>
+                </center>
+                <center>
+                    <h1 class="card-text" style="color: darkgreen;">{{all}} Days</h1>
+                </center>
+            </div>
+          </div>
+      </div>
+  </div>
+    <div class="card" style="margin: 30px;">
+      <div class="card-header">
+        <div class="card-body">
+          Apply for Leave
+        </div>
+      </div>
+
+      {% if error_message %}
+        <script>
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: '{{ error_message }}',
+          });
+        </script>
+      {% endif %}
+
+      <form method="post"  class="card-body" > {# Use 'card-body' class here #}
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-success" type="submit">Apply</button>
+      </form>
+    </div>
+  </div>
+{% endblock content %}

@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.js"></script>
+<div class="container-fluid">
+    <br><br>
+<div class="row">
+    <div class="col-9">
+    <h1>Leave Summary</h1>
+    <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Staff Name</th>
+                <th>Department</th>
+                <th>Position</th>
+                <th>Year</th>
+                <th>Leave Type</th>
+                <th>Total Days Spent</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in summary_data %}
+                <tr>
+                    <td>{{ entry.user__surname }} {{ entry.user__firstname }}</td>
+                    <td>{{ entry.user__department }}</td>
+                    <td>{{ entry.user__position }}</td>
+                    <td>{{ entry.year }}</td>
+                    <td>{{ entry.leave_type }}</td>
+                    <td>{{ entry.total_days_spent }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    <div class="col-3">
+        <br><br>
+        <div class="row">
+            <div class="col-6">
+                
+                <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
+                    <div class="card-header">Approved Leaves for {{current_year}}</div>
+                    <div class="card-body">
+                      <h1 class="card-title"><center>{{aprrovedleave}}</center></h1>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-6">
+                <div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+                    <div class="card-header">Rejected Leaves for {{current_year}}</div>
+                    <div class="card-body">
+                      <h1 class="card-title"><center>{{rejectedleave}}</center></h1>
+                    </div>
+                  </div>
+                
+            </div>
+            <div class="col-6">
+                <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                    <div class="card-header">Pending Approvals {{current_year}}</div>
+                    <div class="card-body">
+                      <h1 class="card-title"><center>{{vetpendingleave}}</center></h1>
+                    </div>
+                  </div>
+                
+            </div>
+            <div class="col-6">
+                <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
+                    <div class="card-header">Pending Vetting for {{current_year}}</div>
+                    <div class="card-body">
+                      <h1 class="card-title"><center>{{unvetpendingleave}}</center></h1>
+                    </div>
+                  </div>
+                
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous" ></script> 
+
+    <!-- Include DataTables and Buttons -->
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js" defer></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.3/js/dataTables.buttons.min.js" defer></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.3/js/buttons.colVis.min.js" defer></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.3/js/buttons.html5.min.js" defer></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.3/js/buttons.print.min.js" defer></script>
+
+    <!-- Include additional dependencies (if needed) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js" defer></script>
+
+    <!-- Moment JS -->
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js" defer></script>
+
+    <script>
+
+        $(document).ready(function() {
+            var tblCategories = $('#dataTable').DataTable({
+                dom: 'Bfrtip', // Buttons are draw at this element
+                buttons: [
+                    {
+                    extend: 'print',
+                    text: 'Print <i class="fas fa-file ml-2"></i>',
+                    titleAttr: 'Print',
+                    className: 'btn btn-info',
+                    exportOptions: {
+                        columns: [ 0, 1, 2, 3, 4, 5 ]
+                    }            
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Download Excel <i class="fas fa-file-excel ml-2"></i>',
+                        titleAttr: 'Download Excel',
+                        className: 'btn btn-success ml-2',
+                        exportOptions: {
+                            columns: [ 0, 1, 2, 3, 4, 5  ]
+                        } 
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Download PDF <i class="fas fa-file-pdf ml-2"></i>',
+                        titleAttr: 'Download PDF',
+                        className: 'btn btn-danger ml-2',
+                        download: 'open',
+                        orientation: 'landscape',
+                        pageSize: 'A4',
+                        title: '*',
+                        exportOptions: {
+                            columns: [ 0, 1, 2, 3, 4, 5  ]
+                        },
+                        customize: function (doc) {
+                            doc.styles = {
+                                header: {
+                                    fontSize: 18,
+                                    bold: true,
+                                    alignment: 'center'
+                                },
+                                subheader: {
+                                    fontSize: 13,
+                                    bold: true
+                                },
+                                quote: {
+                                    italics: true
+                                },
+                                small: {
+                                    fontSize: 8
+                                },
+                                tableHeader: {
+                                    bold: true,
+                                    fontSize: 11,
+                                    color: 'white',
+                                    fillColor: 'darkgreen',
+                                    alignment: 'center'
+                                }
+                            };
+                            doc.content[1].table.widths = ['25%', '25%', '10%', '10%', '20%', '10%'];
+                            doc.content[1].margin = [0, 35, 0, 0];
+                            doc.content[1].layout = {};
+                            doc['footer'] = (function (page, pages) {
+                                return {
+                                    columns: [
+                                        {
+                                            alignment: 'left',
+                                            text: ['Creation date: ', {text: moment().format('MM-DD-YYYY (HH:mm:ss)')}]
+                                        },
+                                        {
+                                            alignment: 'right',
+                                            text: ['page ', {text: page.toString()}, ' de ', {text: pages.toString()}]
+                                        }
+                                    ],
+                                    margin: 20
+                                }
+                            });
+    
+                        }
+                    }
+                ],
+                deferRender: true,
+                columnDefs: [
+                    {
+                        targets: [-1], // column index (start from 0)
+                        orderable: false, // set orderable false for selected columns
+                    }
+                ],
+            });
+        });
+    </script>
+    {% endblock content %}
+      
+    

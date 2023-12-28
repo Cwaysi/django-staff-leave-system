@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CWAYSI-Leave Management</title>
+    
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+        <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css ' %}" rel="stylesheet">
+        <link href="{% static 'css/pagination_buttons.css ' %}" rel="stylesheet">
+        
+        
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <!--Favicon-->
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.all.min.js"></script>
+   <!-- Include FullCalendar CSS and JS -->
+   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+   <!-- Include your custom CSS if needed -->
+   <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #449fc3;">
+        <a class="navbar-brand" style="font-weight: bold; color: white;" href="{% url 'home' %}">Cwaysi Leave System</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            {% if user.is_authenticated %}
+          <ul class="navbar-nav" >
+            {%  url 'home' as homee  %}
+            <li class="nav-item {% if homee == request.path %} active {% endif %}">
+              <a class="nav-link" href="{% url 'home' %}" style="color: aliceblue;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
+                <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
+                <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
+              </svg> Home <span class="sr-only">(current)</span></a>
+            </li>
+            {%  url 'apply' as apply  %}
+            <li class="nav-item {% if apply == request.path %} active {% endif %}">
+              <a class="nav-link" href="{% url 'apply' %}" style="color: aliceblue;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-font-fill" viewBox="0 0 16 16">
+                <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M5.057 6h5.886L11 8h-.5c-.18-1.096-.356-1.192-1.694-1.235l-.298-.01v5.09c0 .47.1.582.903.655v.5H6.59v-.5c.799-.073.898-.184.898-.654V6.755l-.293.01C5.856 6.808 5.68 6.905 5.5 8H5z"/>
+              </svg> Application <span class="sr-only">(current)</span></a>
+            </li>
+            {%  url 'myleave' as myleave  %}
+            <li class="nav-item {% if myleave == request.path %} active {% endif %}">
+              <a class="nav-link" href="{% url 'myleave' %}" style="color: aliceblue;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-font-fill" viewBox="0 0 16 16">
+                <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M5.057 6h5.886L11 8h-.5c-.18-1.096-.356-1.192-1.694-1.235l-.298-.01v5.09c0 .47.1.582.903.655v.5H6.59v-.5c.799-.073.898-.184.898-.654V6.755l-.293.01C5.856 6.808 5.68 6.905 5.5 8H5z"/>
+              </svg> My Leaves <span class="sr-only">(current)</span></a>
+            </li>
+            {% if user.is_superuser or user.position == 'Authority'%}
+            {%  url 'approve' as approve  %}
+            <li class="nav-item {% if approve == request.path %} active {% endif %}">
+              <a class="nav-link" href="{% url 'approve' %}" style="color: aliceblue;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-check-fill" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5m8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3"/>
+                </svg> Approval <span class="sr-only">(current)</span></a>
+            </li>
+            {% endif %}
+            {% if user.is_superuser %}
+            {%  url 'vet' as vet  %}
+            <li class="nav-item {% if vet == request.path %} active {% endif %}">
+              <a class="nav-link" href="{% url 'vet' %}" style="color: aliceblue;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-check-fill" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5m8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3"/>
+                </svg> Vet Leave <span class="sr-only">(current)</span></a>
+            </li>
+            {% endif %}
+            {% if position == 'Director' %}
+            {%  url 'vet' as vet  %}
+            <li class="nav-item {% if vet == request.path %} active {% endif %}">
+              <a class="nav-link" href="{% url 'vet' %}" style="color: aliceblue;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-check-fill" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5m8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3"/>
+                </svg> Vet Leave <span class="sr-only">(current)</span></a>
+            </li>
+            {% endif %}
+            {% if department == 'HR' %}
+            {%  url 'stats' as stats  %}
+            <li class="nav-item {% if stats  == request.path %} active {% endif %}">
+              <a class="nav-link" href="{% url 'stats' %}" style="color: aliceblue;">
+                <i class="fa fa-info-circle" aria-hidden="true"></i> Leave Statistics <span class="sr-only">(current)</span></a>
+            </li>
+            {% endif %}
+            {% if user.is_superuser%}
+            {%  url 'stats' as stats  %}
+            <li class="nav-item {% if stats  == request.path %} active {% endif %}">
+              <a class="nav-link" href="{% url 'stats' %}" style="color: aliceblue;">
+                 <i class="fa fa-info-circle" aria-hidden="true"></i> Leave Statistics <span class="sr-only">(current)</span></a>
+            </li>
+            {% endif %}
+          </ul>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#" style="color: aliceblue;">
+                 {{user.get_full_name}} <span class="sr-only">(current)</span></a>
+            </li> 
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'logout' %}" style="color: aliceblue;">
+                 Logout <span class="sr-only">(current)</span></a>
+            </li>
+            {% if user.is_superuser %}
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'signup' %}" style="color: aliceblue;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                  <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                </svg>&nbsp;Register Staff <span class="sr-only">(current)</span></a>
+            </li>
+            {% endif %}
+          </ul>
+          {% endif %}
+        </div>
+      </nav>
+      
+      {% block content %}
+
+      {% endblock content %}
+
+      <!-- Include Bootstrap 5 and jQuery -->
+
+      <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+   
+      <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  
+      <!-- Core plugin JavaScript-->
+      <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+  
+      <!-- Custom scripts for all pages-->
+      <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+  
+      <!--JavaScript to dissapear messagess automatically-->
+      {% comment %} <script type='text/javascript' src="{% static 'js/dissapear_messages.js' %}"></script> {% endcomment %}
+  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.all.min.js"></script>
+        
+        {% block javascripts %}
+        {% endblock javascripts %}
+
+      </body>
+
+</html>

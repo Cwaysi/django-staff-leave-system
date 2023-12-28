@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.js"></script>
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    Leave Requests
+                </div>
+                <div class="card-body">
+                    
+                    <table class="table table-bordered table-hover" id="dataTable1" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Date Requested</th>
+                                <th>Staff</th>
+                                <th>Leave Type</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Days</th>
+                                <th>Reasons</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for lstt in lst %}
+                            <tr>
+                                <td>{{lstt.date_requested}}</td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#leaveSpentModal{{ lstt.user.id }}" data-user-id="{{ lstt.user.id }}">
+                                        {{ lstt.user.firstname }} {{ lstt.user.surname }}
+                                    </a>
+                                                                     
+                                </td>                                
+                                <td>{{lstt.leave_type}}</td>
+                                <td>{{lstt.start_date}}</td>
+                                <td>{{lstt.end_date}}</td>
+                                <td>{{lstt.days}}</td>
+                                <td>{{lstt.reason}}</td>
+                                <td>
+                                    <a href="#" class="btn btn-success" onclick="confirmApproval({{ lstt.id }})">Vet</a>
+                                    <a href="#" class="btn btn-danger" onclick="rejectApproval({{ lstt.id }})">Reject</a>
+                                </td>
+                            </tr>
+                            <div class="modal fade" id="leaveSpentModal{{ lstt.user.id }}" tabindex="-1" role="dialog" aria-labelledby="leaveSpentModalLabel{{ lstt.user.id }}" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="leaveSpentModalLabel{{ lstt.user.id }}">Leave Spent Information</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div id="leaveSpentContent{{ lstt.user.id }}">
+                                                {% for leave_entry in last %}
+                                                    <p>Leave Type: {{ leave_entry.user.surname }} {{ leave_entry.user.firstname }}</p>
+                                                    <p>Leave Type: {{ leave_entry.leave_type }}</p>
+                                                    <p>Days Spent: {{ leave_entry.days_spent }}</p>
+                                                    <p>---------------------------------------------------</p>
+                                                    <!-- Add more fields as needed -->
+                                                {% endfor %}
+                            
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- Modal -->
+                    
+
+                </div>
+            </div>
+        </div>
+       
+     
+        <div class="col-6">
+            {% include 'vetcopy.html' %}
+            
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function loadLeaveSpent(userId) {
+        $.ajax({
+            url: `/get_leave_spent/${userId}/`,
+            success: function (data) {
+                console.log('Received data:', data);
+    
+                // Assuming the data returned is a JSON object with leave information
+                // Update the content in the modal with the latest leave entry details
+                $('#leaveSpentContent' + userId).html(`
+                    <p>User: ${data.user.firstname} ${data.user.surname}</p>
+                    <p>Leave Type: ${data.leave_type}</p>
+                    <p>Days Spent: ${data.days_spent}</p>
+                    <!-- Add more fields as needed -->
+                `);
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    
+        // Manually open the modal
+        var modalId = '#leaveSpentModal' + userId;
+        $(modalId).modal('show');
+    }
+    
+    $(document).ready(function() {
+        var tblCategories = $('#dataTable1').DataTable({
+            dom: 'Bfrtip', // Buttons are draw at this element
+            buttons: [
+                {
+                extend: 'print',
+                text: 'Print <i class="fas fa-file ml-2"></i>',
+                titleAttr: 'Print',
+                className: 'btn btn-info',
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3 ,4, 5, 6]
+                }            
+                },
+                {
+                    extend: 'excelHtml5',
+                    text: 'Download Excel <i class="fas fa-file-excel ml-2"></i>',
+                    titleAttr: 'Download Excel',
+                    className: 'btn btn-success ml-2',
+                    exportOptions: {
+                        columns: [ 0, 1, 2, 3 ,4, 5, 6]
+                    } 
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: 'Download PDF <i class="fas fa-file-pdf ml-2"></i>',
+                    titleAttr: 'Download PDF',
+                    className: 'btn btn-danger ml-2',
+                    download: 'open',
+                    orientation: 'vertical',
+                    pageSize: 'A4',
+                    title: '*',
+                    exportOptions: {
+                        columns: [ 0, 1, 2, 3 ,4, 5, 6]
+                    },
+                    customize: function (doc) {
+                        doc.styles = {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                alignment: 'center'
+                            },
+                            subheader: {
+                                fontSize: 13,
+                                bold: true
+                            },
+                            quote: {
+                                italics: true
+                            },
+                            small: {
+                                fontSize: 8
+                            },
+                            tableHeader: {
+                                bold: true,
+                                fontSize: 11,
+                                color: 'white',
+                                fillColor: '#2d4154',
+                                alignment: 'center'
+                            }
+                        };
+                        doc.content[1].table.widths = ['10%', '20%', '15%', '10%', '15%', '10%','20%'];
+                        doc.content[1].margin = [0, 35, 0, 0];
+                        doc.content[1].layout = {};
+                        doc['footer'] = (function (page, pages) {
+                            return {
+                                columns: [
+                                    {
+                                        alignment: 'left',
+                                        text: ['Creation date: ', {text: moment().format('MM-DD-YYYY (HH:mm:ss)')}]
+                                    },
+                                    {
+                                        alignment: 'right',
+                                        text: ['page ', {text: page.toString()}, ' de ', {text: pages.toString()}]
+                                    }
+                                ],
+                                margin: 20
+                            }
+                        });
+
+                    }
+                }
+            ],
+            deferRender: true,
+            columnDefs: [
+                {
+                    targets: [-1], // column index (start from 0)
+                    orderable: false, // set orderable false for selected columns
+                }
+            ],
+        });
+    });
+</script>
+<script>
+    function confirmApproval(itemId) {
+        if (!itemId) {
+            console.error('Invalid item ID.');
+            return;
+        }
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You are about to vet this leave note that you cannot reverse it.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, vet it!',
+            input: 'text',  // Add an input field for comments
+            inputPlaceholder: 'Enter your comment here...',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                    
+                const comment = result.value;
+                console.log('Comment:', comment);
+                window.location.href = `/vetting/leave/${itemId}/?comment=${comment}`;
+            }
+        });
+    }
+</script>
+<script>
+    function rejectApproval(itemId) {
+        if (!itemId) {
+            console.error('Invalid item ID.');
+            return;
+        }
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You are about to reject this leave, note that you cannot reverse it.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, reject it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // User clicked "Yes", navigate to the approval URL
+                const comment = result.value;
+                window.location.href = `/rejectvet/leave/${itemId}/`;
+            }
+        });
+    }
+</script>
+
+{% endblock content %}

@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid">
+    <br>
+    <div class="card">
+        <div class="card-header">
+            My Statistics {{year}}
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-3">
+                    <center>
+                        <h5 class="card-title">Days Entitled for {{year}}(Annual)</h5>
+                    </center>
+                    <center>
+                        <h1 class="card-text">{{days}} Days</h1>
+                    </center>
+                </div>
+                <div class="col-3">
+                    <center>
+                        <h5 class="card-title">Total Days Approved/Spent(Annual)</h5>
+                    </center>
+                    <center>
+                        <h1 class="card-text">{{spent}} Days</h1>
+                    </center>
+                </div>
+                <div class="col-3">
+                    <center>
+                        <h5 class="card-title">Total Days Left(Annual)</h5>
+                    </center>
+                    <center>
+                        <h1 class="card-text">{{left}} Days</h1>
+                    </center>
+                </div>
+                <div class="col-3">
+                    <center>
+                        <h5 class="card-title">Total of All Leave Spent</h5>
+                    </center>
+                    <center>
+                        <h1 class="card-text" style="color: darkgreen;">{{all}} Days</h1>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Birthday Celebrants
+      </button>
+      
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Birthday Celebrants for this week</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-hover" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Date of Birth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for celebrant in birthday_celebrants %}
+                        <tr {% if celebrant.date_of_birth.day == today.day and celebrant.date_of_birth.month == today.month %}style="background-color: yellow;"{% endif %}>
+                                <td>{{ celebrant.firstname }}</td>
+                                <td>{{ celebrant.surname }}</td>
+                                <td>{{ celebrant.date_of_birth }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <hr>
+    <div class='row'>
+        <div class="col-6">
+            <div class="container mt-5">
+                <h2>Approved Leave Calendar</h2>
+                <div id="calendar"></div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="container mt-5">
+                <h2>Pending Leave Calendar</h2>
+                <div id="calendar2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Include Bootstrap JS and any other required scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+
+        var leaveRequests = [
+            // Convert your leave requests to FullCalendar events here
+            {% for leave_request in leave_requests %}
+            {% if leave_request.status == "Approved" %}
+    {
+        title: '{{ leave_request.user.firstname }}, {{ leave_request.user.surname }} - {{ leave_request.leave_type }}, requested on {{ leave_request.date_requested}}',
+            start: moment('{{ leave_request.start_date }}', 'MMMM DD, YYYY').format('YYYY-MM-DD'),
+                end: moment('{{ leave_request.end_date }}', 'MMMM DD, YYYY').format('YYYY-MM-DD'),
+                    color: '{% if leave_request.status == "Approved" %}green{% elif leave_request.status == "rejected" %}red{% else %}navy{% endif %}'
+    },
+    {% endif %}
+    {% endfor %}
+            ];
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        // Customize FullCalendar options as needed
+        // See FullCalendar documentation: https://fullcalendar.io/docs
+        events: leaveRequests
+    });
+
+    calendar.render();
+        });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar2');
+
+        var leaveRequests = [
+            // Convert your leave requests to FullCalendar events here
+            {% for leave_request in leave_requests %}
+            {% if leave_request.status == "Pending" %}
+    {
+        title: '{{ leave_request.user.firstname }}, {{ leave_request.user.surname }} - {{ leave_request.leave_type }}, requested on {{ leave_request.date_requested}}',
+            start: moment('{{ leave_request.start_date }}', 'MMMM DD, YYYY').format('YYYY-MM-DD'),
+                end: moment('{{ leave_request.end_date }}', 'MMMM DD, YYYY').format('YYYY-MM-DD'),
+                    color: '{% if leave_request.status == "approved" %}green{% elif leave_request.status == "rejected" %}red{% else %}navy{% endif %}'
+    },
+    {% endif %}
+    {% endfor %}
+            ];
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        // Customize FullCalendar options as needed
+        // See FullCalendar documentation: https://fullcalendar.io/docs
+        events: leaveRequests
+    });
+
+    calendar.render();
+        });
+</script>
+{% endblock content %}
