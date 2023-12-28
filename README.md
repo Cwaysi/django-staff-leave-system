@@ -1,7 +1,8 @@
 # django-staff-leave-system
 A simple but powerful leave system for staff management
 
-![Image Title](leave 1.JPG)
-
-
-![Leave System](leave 1.jpeg)
+<img src="leave 1.JPG" alt="Sales">
+<img src="leave 2.JPG" alt="Sales">
+<img src="leave 3.JPG" alt="Sales">
+<img src="leave 4.JPG" alt="Sales">
+<img src="leave 5.JPG" alt="Sales">
