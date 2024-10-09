@@ -39,7 +39,7 @@
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #449fc3;">
+    <nav class="navbar navbar-expand-lg bg-primary navbar-light" >
         <a class="navbar-brand" style="font-weight: bold; color: white;" href="{% url 'home' %}">Cwaysi Leave System</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -58,7 +58,7 @@
             <li class="nav-item {% if apply == request.path %} active {% endif %}">
               <a class="nav-link" href="{% url 'apply' %}" style="color: aliceblue;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-font-fill" viewBox="0 0 16 16">
                 <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M5.057 6h5.886L11 8h-.5c-.18-1.096-.356-1.192-1.694-1.235l-.298-.01v5.09c0 .47.1.582.903.655v.5H6.59v-.5c.799-.073.898-.184.898-.654V6.755l-.293.01C5.856 6.808 5.68 6.905 5.5 8H5z"/>
-              </svg> Application <span class="sr-only">(current)</span></a>
+              </svg> Apply <span class="sr-only">(current)</span></a>
             </li>
             {%  url 'myleave' as myleave  %}
             <li class="nav-item {% if myleave == request.path %} active {% endif %}">

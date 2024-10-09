@@ -229,7 +229,7 @@ def approve(request, id):
     comment = request.GET.get('comment', '')
     existing_comments = requ.comment
     if comment:
-        comment_with_user = f"{comment} by - {request.user.get_full_name()}#####---####  "
+        comment_with_user = f"{comment} by - {request.user.get_full_name()}  "
         if existing_comments:
             existing_comments += f"\n{comment_with_user}"
         else:
@@ -251,7 +251,7 @@ def rejectleave(request, id):
     comment = request.GET.get('comment', '')
     existing_comments = requ.comment
     if comment:
-        comment_with_user = f"{comment} by - {request.user.get_full_name()}#####---####  "
+        comment_with_user = f"{comment} by - {request.user.get_full_name()}  "
         if existing_comments:
             existing_comments += f"\n{comment_with_user}"
         else:
@@ -287,7 +287,7 @@ def vet(request, id):
     comment = request.GET.get('comment', '')
     existing_comments = requ.comment
     if comment:
-        comment_with_user = f"{comment} by - {request.user.get_full_name()}#####---####  "
+        comment_with_user = f"{comment} by - {request.user.get_full_name()}  "
         if existing_comments:
             existing_comments += f"\n{comment_with_user}"
         else:
@@ -309,7 +309,7 @@ def rejectvet(request, id):
 
 @login_required(login_url='/')
 def myleave(request):
-    mylr = LeaveRequest.objects.filter(user=request.user).order_by('-date_requested')
+    mylr = LeaveRequest.objects.filter(user=request.user).order_by('id')
    
     context={
         'requests': mylr

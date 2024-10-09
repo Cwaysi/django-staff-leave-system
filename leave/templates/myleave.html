@@ -3,15 +3,15 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="container">
+<div style="margin-left: 2%; margin-right: 2%;">
 <!-- Page content  -->
 <br>
 
 
     <!-- DataTable -->
-    <div class="card shadow mb-12">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">All my leave</h6>
+    <div class="card shadow mb-12 ">
+        <div class="card-header py-3 bg-primary text-white">
+            <h6 class="m-0 font-weight-bold text-white">All my leave</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -40,10 +40,10 @@
                             <td>{{lstt.start_date}}</td>
                             <td>{{lstt.end_date}}</td>
                             <td>{{lstt.days}}</td>
-                            <td>{{lstt.reason}}</td>
+                            <td>{{lstt.reason |linebreaks}}</td>
                             <td>{{lstt.verted}}</td>
                             <td>{{lstt.verted_By}}</td>
-                            <td>{{lstt.comment}}</td>
+                            <td>{{lstt.comment |linebreaks}}</td>
                             <td>{{lstt.status}}</td>
                         </tr>
                         {% endfor %}

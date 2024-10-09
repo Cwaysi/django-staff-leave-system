@@ -1,44 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container-fluid">
+<div style="margin-left: 2%; margin-right: 2%;">
     <br>
-    <div class="card">
-        <div class="card-header">
-            My Statistics {{year}}
+    <div class="card shadow-sm" style="border-radius: 15px; border-radius: 15px;">
+        <div class="card-header bg-primary text-white" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+            <h4>My Statistics {{year}}</h4>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-3">
-                    <center>
-                        <h5 class="card-title">Days Entitled for {{year}}(Annual)</h5>
-                    </center>
-                    <center>
-                        <h1 class="card-text">{{days}} Days</h1>
-                    </center>
+            <div class="row text-center">
+                <div class="col-md-3 col-sm-6 mb-3" >
+                    <div class="card border-0 bg-light p-3" style="box-shadow: 0 0 10px gray; border-radius: 10px;">
+                        <h5 class="card-title">Days Entitled (Annual)</h5>
+                        <h1 class="card-text" id="days-counter">{{days}} Days</h1>
+                    </div>
                 </div>
-                <div class="col-3">
-                    <center>
-                        <h5 class="card-title">Total Days Approved/Spent(Annual)</h5>
-                    </center>
-                    <center>
-                        <h1 class="card-text">{{spent}} Days</h1>
-                    </center>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="card border-0 bg-light p-3" style="box-shadow: 0 0 10px gray; border-radius: 10px;">
+                        <h5 class="card-title">Total Days Approved/Spent (Annual)</h5>
+                        <h1 class="card-text" id="spent-counter">{{spent}} Days</h1>
+                    </div>
                 </div>
-                <div class="col-3">
-                    <center>
-                        <h5 class="card-title">Total Days Left(Annual)</h5>
-                    </center>
-                    <center>
-                        <h1 class="card-text">{{left}} Days</h1>
-                    </center>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="card border-0 bg-light p-3" style="box-shadow: 0 0 10px gray; border-radius: 10px;">
+                        <h5 class="card-title">Total Days Left (Annual)</h5>
+                        <h1 class="card-text" id="left-counter">{{left}} Days</h1>
+                    </div>
                 </div>
-                <div class="col-3">
-                    <center>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="card border-0 bg-light p-3" style="box-shadow: 0 0 10px darkgreen; border-radius: 10px;">
                         <h5 class="card-title">Total of All Leave Spent</h5>
-                    </center>
-                    <center>
-                        <h1 class="card-text" style="color: darkgreen;">{{all}} Days</h1>
-                    </center>
+                        <h1 class="card-text text-success" id="all-counter" >{{all}} Days</h1>
+                    </div>
                 </div>
             </div>
         </div>
@@ -46,117 +38,156 @@
     <br>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Birthday Celebrants
-      </button>
-      
-      <!-- Modal -->
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Birthday Celebrants for this week</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered table-hover" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Date of Birth</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for celebrant in birthday_celebrants %}
-                        <tr {% if celebrant.date_of_birth.day == today.day and celebrant.date_of_birth.month == today.month %}style="background-color: yellow;"{% endif %}>
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="max-width: 70%; width: 70%;"> <!-- Inline CSS added -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Birthday Celebrants for this Week</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr class="table-primary">
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Date of Birth</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for celebrant in birthday_celebrants %}
+                            <tr {% if celebrant.date_of_birth.day == today.day and celebrant.date_of_birth.month == today.month %}class="table-warning"{% endif %}>
                                 <td>{{ celebrant.firstname }}</td>
                                 <td>{{ celebrant.surname }}</td>
                                 <td>{{ celebrant.date_of_birth }}</td>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-          </div>
         </div>
-      </div>
+    </div>
+
     <hr>
-    <div class='row'>
-        <div class="col-6">
-            <div class="container mt-5">
-                <h2>Approved Leave Calendar</h2>
+    <div class="row g-3"> <!-- Use Bootstrap gap class -->
+        <div class="col-md-6" style="box-shadow: 0 0 5px gray; border-radius: 10px;">
+            <div class="container p-3 bg-light shadow-sm" >
+                <h4 class="text-primary">Approved Leave Calendar</h4>
                 <div id="calendar"></div>
             </div>
         </div>
-        <div class="col-6">
-            <div class="container mt-5">
-                <h2>Pending Leave Calendar</h2>
+        <div class="col-md-6" style="box-shadow: 0 0 5px gray; border-radius: 10px;">
+            <div class="container p-3 bg-light shadow-sm">
+                <h4 class="text-warning">Pending Leave Calendar</h4>
                 <div id="calendar2"></div>
             </div>
         </div>
     </div>
-</div>
-<!-- Include Bootstrap JS and any other required scripts -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+</div>
+
+<!-- Include Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Approved Leave Calendar
         var calendarEl = document.getElementById('calendar');
-
         var leaveRequests = [
-            // Convert your leave requests to FullCalendar events here
             {% for leave_request in leave_requests %}
             {% if leave_request.status == "Approved" %}
-    {
-        title: '{{ leave_request.user.firstname }}, {{ leave_request.user.surname }} - {{ leave_request.leave_type }}, requested on {{ leave_request.date_requested}}',
-            start: moment('{{ leave_request.start_date }}', 'MMMM DD, YYYY').format('YYYY-MM-DD'),
-                end: moment('{{ leave_request.end_date }}', 'MMMM DD, YYYY').format('YYYY-MM-DD'),
-                    color: '{% if leave_request.status == "Approved" %}green{% elif leave_request.status == "rejected" %}red{% else %}navy{% endif %}'
-    },
-    {% endif %}
-    {% endfor %}
-            ];
-
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        // Customize FullCalendar options as needed
-        // See FullCalendar documentation: https://fullcalendar.io/docs
-        events: leaveRequests
-    });
-
-    calendar.render();
+            {
+                title: '{{ leave_request.user.firstname }} {{ leave_request.user.surname }} - {{ leave_request.leave_type }}',
+                start: '{{ leave_request.start_date|date:"Y-m-d" }}', // Ensure the date format is correct
+                end: '{{ leave_request.end_date|date:"Y-m-d" }}', // Ensure the date format is correct
+                color: 'green'
+            },
+            {% endif %}
+            {% endfor %}
+        ];
+        
+        console.log(leaveRequests); // Debugging line to check events
+        
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: leaveRequests,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            }
         });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var calendarEl = document.getElementById('calendar2');
+        calendar.render();
 
-        var leaveRequests = [
-            // Convert your leave requests to FullCalendar events here
+        // Pending Leave Calendar
+        var calendarEl2 = document.getElementById('calendar2');
+        var pendingLeaveRequests = [
             {% for leave_request in leave_requests %}
             {% if leave_request.status == "Pending" %}
-    {
-        title: '{{ leave_request.user.firstname }}, {{ leave_request.user.surname }} - {{ leave_request.leave_type }}, requested on {{ leave_request.date_requested}}',
-            start: moment('{{ leave_request.start_date }}', 'MMMM DD, YYYY').format('YYYY-MM-DD'),
-                end: moment('{{ leave_request.end_date }}', 'MMMM DD, YYYY').format('YYYY-MM-DD'),
-                    color: '{% if leave_request.status == "approved" %}green{% elif leave_request.status == "rejected" %}red{% else %}navy{% endif %}'
-    },
-    {% endif %}
-    {% endfor %}
-            ];
-
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        // Customize FullCalendar options as needed
-        // See FullCalendar documentation: https://fullcalendar.io/docs
-        events: leaveRequests
-    });
-
-    calendar.render();
+            {
+                title: '{{ leave_request.user.firstname }} {{ leave_request.user.surname }} - {{ leave_request.leave_type }}',
+                start: '{{ leave_request.start_date|date:"Y-m-d" }}', // Ensure the date format is correct
+                end: '{{ leave_request.end_date|date:"Y-m-d" }}', // Ensure the date format is correct
+                color: 'navy'
+            },
+            {% endif %}
+            {% endfor %}
+        ];
+        
+        console.log(pendingLeaveRequests); // Debugging line to check events
+        
+        var calendar2 = new FullCalendar.Calendar(calendarEl2, {
+            initialView: 'dayGridMonth',
+            events: pendingLeaveRequests,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            }
         });
+        calendar2.render();
+    });
 </script>
+
+<script>
+    function animateCounter(id, start, end, duration) {
+        const obj = document.getElementById(id);
+        let current = start;
+        const range = end - start;
+        const increment = range > 0 ? 1 : (range < 0 ? -1 : 0);  // Increment by 1 or -1, or stay the same if range is 0
+        const stepTime = Math.abs(Math.floor(duration / Math.abs(range > 0 ? range : 1))); // Ensure stepTime is valid even when range is 0
+
+        if (range === 0) {
+            obj.textContent = end + ' Days';  // If start and end are the same, directly set the value
+            return;
+        }
+
+        const timer = setInterval(() => {
+            current += increment;
+            obj.textContent = current + ' Days';  // Update the text with the current value and "Days"
+
+            if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                clearInterval(timer);  // Stop the interval when the target value is reached
+            }
+        }, stepTime);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Trigger the counters when the page loads
+        animateCounter('days-counter', 0, {{days}}, 1000);  // Animate 'Days Entitled'
+        animateCounter('spent-counter', 0, {{spent}}, 1000);  // Animate 'Days Spent'
+        animateCounter('left-counter', 0, {{left}}, 1000);   // Animate 'Days Left'
+        animateCounter('all-counter', 0, {{all}}, 1000);    // Animate 'All Days'
+    });
+</script>
+
+
 {% endblock content %}

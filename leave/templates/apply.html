@@ -1,70 +1,73 @@
 {% extends 'base.html' %}
 {% block content %}
-  {% load crispy_forms_tags %}
-  <div class="container">
-    <div class="card">
-      <div class="card-header">
-          My Statistics
-      </div>
-      <div class="card-body">
-          <div class="row">
-              <div class="col-3">
-                  <center>
-                      <h5 class="card-title">Days Entitled for {{year}}(Annual)</h5>
-                  </center>
-                  <center>
-                      <h1 class="card-text">{{days}} Days</h1>
-                  </center>
-              </div>
-              <div class="col-3">
-                  <center>
-                      <h5 class="card-title">Total Days Approved/Spent(Annual)</h5>
-                  </center>
-                  <center>
-                      <h1 class="card-text">{{spent}} Days</h1>
-                  </center>
-              </div>
-              <div class="col-3">
-                  <center>
-                      <h5 class="card-title">Total Days Left(Annual)</h5>
-                  </center>
-                  <center>
-                      <h1 class="card-text">{{left}} Days</h1>
-                  </center>
-              </div>
-              <div class="col-3">
-                <center>
-                    <h5 class="card-title">Total of All Leave Spent</h5>
-                </center>
-                <center>
-                    <h1 class="card-text" style="color: darkgreen;">{{all}} Days</h1>
-                </center>
-            </div>
-          </div>
-      </div>
-  </div>
-    <div class="card" style="margin: 30px;">
-      <div class="card-header">
-        <div class="card-body">
-          Apply for Leave
+{% load crispy_forms_tags %}
+<div class="container" style="margin-top: 30px;">
+    <!-- Statistics Card -->
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h4 class="text-center">My Statistics for {{ year }}</h4>
         </div>
-      </div>
-
-      {% if error_message %}
-        <script>
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: '{{ error_message }}',
-          });
-        </script>
-      {% endif %}
-
-      <form method="post"  class="card-body" > {# Use 'card-body' class here #}
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button class="btn btn-success" type="submit">Apply</button>
-      </form>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card border-0" style="border-radius: 15px; box-shadow: 0 0 8px rgb(39, 96, 255);">
+                        <div class="card-body">
+                            <h5 class="card-title">Days Entitled</h5>
+                            <h1 class="card-text">{{ days }} Days</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card border-0 " style="border-radius: 15px; box-shadow: 0 0 8px rgb(39, 96, 255);">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Days Approved/Spent</h5>
+                            <h1 class="card-text">{{ spent }} Days</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card border-0 " style="border-radius: 15px; box-shadow: 0 0 8px rgb(39, 96, 255);">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Days Left</h5>
+                            <h1 class="card-text">{{ left }} Days</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card border-0 " style="border-radius: 15px; box-shadow: 0 0 8px rgb(39, 96, 255);">
+                        <div class="card-body">
+                            <h5 class="card-title">Total of All Leave Spent</h5>
+                            <h1 class="card-text text-success">{{ all }} Days</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
+
+    <!-- Leave Application Card -->
+    <div class="card mt-4 shadow-lg" style="border-radius: 15px;">
+        <div class="card-header bg-warning">
+            <h5 class="text-center">Apply for Leave</h5>
+        </div>
+
+        {% if error_message %}
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ error_message }}',
+            });
+        </script>
+        {% endif %}
+
+        <form method="post" class="card-body">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="text-center mt-3">
+                <button class="btn btn-success" type="submit">Apply</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock content %}

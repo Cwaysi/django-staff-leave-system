@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-6">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header bg-primary text-white">
                     Leave Requests
                 </div>
                 <div class="card-body">
@@ -40,7 +40,7 @@
                                 <td>{{lstt.start_date}}</td>
                                 <td>{{lstt.end_date}}</td>
                                 <td>{{lstt.days}}</td>
-                                <td>{{lstt.reason}}</td>
+                                <td>{{lstt.reason | linebreaks}}</td>
                                 <td>
                                     <a href="#" class="btn btn-success" onclick="confirmApproval({{ lstt.id }})">Vet</a>
                                     <a href="#" class="btn btn-danger" onclick="rejectApproval({{ lstt.id }})">Reject</a>
