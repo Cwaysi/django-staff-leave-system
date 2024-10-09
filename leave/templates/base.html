@@ -93,14 +93,12 @@
                 </svg> Vet Leave <span class="sr-only">(current)</span></a>
             </li>
             {% endif %}
-            {% if department == 'HR' %}
-            {%  url 'stats' as stats  %}
-            <li class="nav-item {% if stats  == request.path %} active {% endif %}">
-              <a class="nav-link" href="{% url 'stats' %}" style="color: aliceblue;">
-                <i class="fa fa-info-circle" aria-hidden="true"></i> Leave Statistics <span class="sr-only">(current)</span></a>
+            {%  url 'holiday' as holiday  %}
+            <li class="nav-item {% if holiday  == request.path %} active {% endif %}">
+              <a class="nav-link" href="{% url 'holiday' %}" style="color: aliceblue;">
+                 <i class="fa fa-info-circle" aria-hidden="true"></i> Holidays <span class="sr-only">(current)</span></a>
             </li>
-            {% endif %}
-            {% if user.is_superuser%}
+            {% if user.is_superuser or department == 'HR' %}
             {%  url 'stats' as stats  %}
             <li class="nav-item {% if stats  == request.path %} active {% endif %}">
               <a class="nav-link" href="{% url 'stats' %}" style="color: aliceblue;">

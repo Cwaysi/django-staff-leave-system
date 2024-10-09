@@ -37,7 +37,7 @@ class CustomUser(AbstractUser):
 class Holidays(models.Model):
     year = models.IntegerField(null=True, blank=True)
     date = models.DateField()
-    holiday = models.CharField(max_length=300, null = True, blank= True)
+    holiday = models.CharField('Title',max_length=300, null = True, blank= True)
 
     def __str__(self):
         return self.holiday

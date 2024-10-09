@@ -3,7 +3,13 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import *
 
-
+class HolidayForm(forms.ModelForm):
+    date = forms.DateField(
+        widget=forms.widgets.DateInput(attrs={'type': 'date'}),
+    )
+    class Meta:
+        model = Holidays
+        fields = "__all__"
 class SignUpForm(UserCreationForm):
     date_of_birth = forms.DateField(
         widget=forms.widgets.DateInput(attrs={'type': 'date'}),

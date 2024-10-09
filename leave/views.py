@@ -316,7 +316,7 @@ def myleave(request):
     }
     return render(request, 'myleave.html', context)
 
-
+@login_required(login_url='/')
 def stats(request):
     # Query to get the sum of days_spent for each user, year, and leave type
     current_year = datetime.now().year
@@ -350,3 +350,30 @@ def get_leave_spent(request, user_id):
     serialized_data = serializer.data
     print(serialized_data)
     return JsonResponse(serialized_data, safe=False)
+
+
+@login_required(login_url='/')
+def holidays(request):
+    holidays = Holidays.objects.all().order_by('-date')
+    form = HolidayForm()
+    if request.method == 'POST':
+        form = HolidayForm(request.POST)
+        if form.is_valid():
+            form.save()
+            
+            return redirect("holiday")
+        else:
+            form = HolidayForm()
+
+    context = {
+        'holidays' : holidays,
+        'form' : form,
+    }
+
+    return render(request, "holiday.html", context)
+
+@login_required(login_url='/')
+def delholiday (request, id):
+    hol = get_object_or_404(Holidays, id=id)
+    hol.delete()
+    return redirect("holiday")
