@@ -35,35 +35,56 @@
    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
    <style>
-    :root {
-      --bg-color-light: white;
-      --text-color-light: black;
-      --bg-color-dark: #121212;
-      --text-color-dark: white;
-    }
-  
-    [data-bs-theme="light"] {
-      background-color: var(--bg-color-light);
-      color: var(--text-color-light);
-    }
-  
-    [data-bs-theme="dark"] {
-      background-color: var(--bg-color-dark);
-      color: var(--text-color-dark);
-    }
-  
-    /* Ensure navbar and other elements switch */
-    [data-bs-theme="dark"] .navbar {
-      background-color: #1f1f1f;
-    }
-  
-    [data-bs-theme="dark"] .nav-link {
-      color: var(--text-color-dark);
-    }
-  
-    [data-bs-theme="dark"] body {
-      background-color: var(--bg-color-dark);
-    }
+   :root {
+  --bg-color-light: white;
+  --text-color-light: black;
+  --bg-color-dark: #121212;
+  --text-color-dark: white;
+  --bg-primary-light: #007bff; /* Default primary background color */
+  --bg-primary-dark: #343a40; /* Dark mode background equivalent */
+}
+
+[data-bs-theme="light"] {
+  background-color: var(--bg-color-light);
+  color: var(--text-color-light);
+}
+
+[data-bs-theme="dark"] {
+  background-color: var(--bg-color-dark);
+  color: var(--text-color-dark);
+}
+
+[data-bs-theme="light"] .bg-primary {
+  background-color: var(--bg-primary-light) !important;
+  color: white;
+}
+
+[data-bs-theme="dark"] .bg-primary {
+  background-color: var(--bg-primary-dark) !important;
+  color: white;
+}
+
+/* Navbar specific adjustments */
+[data-bs-theme="dark"] .navbar {
+  background-color: #1f1f1f;
+}
+
+[data-bs-theme="dark"] .navbar .nav-link {
+  color: var(--text-color-dark);
+}
+
+[data-bs-theme="light"] .navbar .nav-link {
+  color: var(--text-color-light);
+}
+
+[data-bs-theme="dark"] body {
+  background-color: var(--bg-color-dark);
+}
+
+[data-bs-theme="light"] body {
+  background-color: var(--bg-color-light);
+}
+
   </style>
   
 </head>
